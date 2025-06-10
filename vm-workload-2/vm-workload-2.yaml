@@ -21,7 +21,7 @@ spec:
           threads: 1
         devices:
           disks:
-            - name: rootdisk
+            - name: rootdisk1
               disk:
                 bus: virtio
             - name: cloudinit
@@ -50,11 +50,11 @@ spec:
         - sshPublicKey:
             source:
               secret:
-                secretName: vm-secret-1
+                secretName: vm-secret-2
             propagationMethod:
               configDrive: {}
       volumes:
-        - name: rootdisk
+        - name: rootdisk1
           persistentVolumeClaim:
             claimName: vm-2-pvc
         - name: cloudinit

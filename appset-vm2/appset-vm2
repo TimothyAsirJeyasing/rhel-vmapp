@@ -1,0 +1,53 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: appset-vm2
+  namespace: default
+spec:
+  dataVolumeTemplates:
+    - metadata:
+        name: appset-vm2-volume
+      spec:
+        sourceRef:
+          kind: DataSource
+          name: rhel8
+          namespace: openshift-virtualization-os-images
+        storage:
+          resources:
+            requests:
+              storage: '32212254720'
+          storageClassName: ocs-storagecluster-ceph-rbd
+  instancetype:
+    name: u1.medium
+  preference:
+    name: rhel.8
+  runStrategy: Always
+  template:
+    metadata:
+      labels:
+        network.kubevirt.io/headlessService: headless
+    spec:
+      domain:
+        devices:
+          autoattachPodInterface: false
+          disks: []
+          interfaces:
+            - masquerade: {}
+              name: default
+      networks:
+        - name: default
+          pod: {}
+      subdomain: headless
+      volumes:
+        - dataVolume:
+            name: appset-vm2-volume
+          name: rootdisk
+        - cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              chpasswd:
+                expire: false
+              password: ms82-1qw4-g2pk
+              user: rhel
+          name: cloudinitdisk
+
